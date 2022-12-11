@@ -1,4 +1,4 @@
-from unnet.data import Node
+from unnet.grad import Node
 
 
 def test_add():

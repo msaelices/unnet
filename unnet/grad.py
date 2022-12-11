@@ -34,8 +34,8 @@ class Node:
         self.grad: float = 0.0
 
     def __repr__(self) -> str:
-        return f"Node({self.value})"
-    
+        return f'Node({self.value})'
+
     def __hash__(self) -> int:
         return id(self)
 

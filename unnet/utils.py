@@ -4,7 +4,7 @@ from graphviz import Digraph  # type: ignore
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from unnet.data import Node
+    from unnet.grad import Node
 
 
 def walk(n: Node) -> tuple[list, list]:
