@@ -6,7 +6,9 @@ from .utils import walk
 
 
 ADD = '+'
+SUB = '-'
 MUL = '*'
+POW = '^'
 
 
 def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> float:
@@ -14,9 +16,14 @@ def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> floa
         case '+':
             node.grad += result.grad
             other.grad += result.grad
+        case '-':
+            node.grad -= result.grad
+            other.grad -= result.grad
         case '*':
             node.grad += other.value * result.grad
             other.grad += node.value * result.grad
+        case '^':
+            node.grad += other.value * node.value ** (other.value - 1) * result.grad
         case _:
             raise RuntimeError('Invalid operation')
 
@@ -41,9 +48,23 @@ class Node:
         other = other if isinstance(other, Node) else Node(other)
         return Node(self.value + other.value, name=f'{self.name} {ADD} {other.name}', op=ADD, parents=(self, other))
 
+    def __radd__(self, other) -> Node:
+        return self + other
+
+    def __sub__(self, other) -> Node:
+        other = other if isinstance(other, Node) else Node(other)
+        return Node(self.value - other.value, name=f'{self.name} {SUB} {other.name}', op=ADD, parents=(self, other))
+
     def __mul__(self, other) -> Node:
         other = other if isinstance(other, Node) else Node(other)
         return Node(self.value * other.value, name=f'{self.name} {MUL} {other.name}', op=MUL, parents=(self, other))
+
+    def __pow__(self, other):
+        other = other if isinstance(other, Node) else Node(other)
+        return Node(self.value**other.value, name=f'{self.name} {POW} {other.name}', op=POW, parents=(self, other))
+
+    def __rpow__(self, other):
+        return self**other
 
     def __eq__(self, other) -> bool:
         return self.value == other.value
