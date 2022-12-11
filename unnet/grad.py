@@ -26,23 +26,24 @@ class Node:
     """Representation of an expression node capable of performing math operations and calculate the back propagation"""
 
     value: int | float
+    name: str = 'N/A'
     op: str | None = None
     parents: tuple = tuple()
     grad: int | float = 0.0
 
     def __repr__(self) -> str:
-        return f'Node({self.value})'
+        return f'{self.name if self.name else "Node"}({self.value})'
 
     def __hash__(self) -> int:
         return id(self)
 
     def __add__(self, other) -> Node:
         other = other if isinstance(other, Node) else Node(other)
-        return Node(self.value + other.value, op=ADD, parents=(self, other))
+        return Node(self.value + other.value, name=f'{self.name} {ADD} {other.name}', op=ADD, parents=(self, other))
 
     def __mul__(self, other) -> Node:
         other = other if isinstance(other, Node) else Node(other)
-        return Node(self.value * other.value, op=MUL, parents=(self, other))
+        return Node(self.value * other.value, name=f'{self.name} {MUL} {other.name}', op=MUL, parents=(self, other))
 
     def __eq__(self, other) -> bool:
         return self.value == other.value
