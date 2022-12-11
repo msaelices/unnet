@@ -40,9 +40,11 @@ class Node:
         return id(self)
 
     def __add__(self, other) -> Node:
+        other = other if isinstance(other, Node) else Node(other)
         return Node(self.value + other.value, op=ADD, parents=(self, other))
 
     def __mul__(self, other) -> Node:
+        other = other if isinstance(other, Node) else Node(other)
         return Node(self.value * other.value, op=MUL, parents=(self, other))
 
     def __eq__(self, other) -> bool:
