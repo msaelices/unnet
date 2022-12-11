@@ -4,7 +4,6 @@ from .utils import walk
 
 
 ADD = '+'
-SUB = '-'
 MUL = '*'
 
 
@@ -42,9 +41,6 @@ class Node:
 
     def __add__(self, other) -> Node:
         return Node(self.value + other.value, op=ADD, parents=(self, other))
-
-    def __sub__(self, other) -> Node:
-        return Node(self.value - other.value, op=SUB, parents=(self, other))
 
     def __mul__(self, other) -> Node:
         return Node(self.value * other.value, op=MUL, parents=(self, other))
