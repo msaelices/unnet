@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from graphviz import Digraph
+from graphviz import Digraph  # type: ignore
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from unnet.data import Node
 
 
-def walk(n: Node) -> tuple(set, set):
+def walk(n: Node) -> tuple[set, set]:
     nodes, edges = set(), set()
 
     if n not in nodes:

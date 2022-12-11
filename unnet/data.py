@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from enum import Enum
-
 ADD = '+'
 SUB = '-'
 MUL = '*'
@@ -35,7 +33,7 @@ class Node:
     def __mul__(self, other) -> Node:
         return Node(self.value * other.value, op=MUL, parents=(self, other))
 
-    def __eq__(self, other) -> Node:
+    def __eq__(self, other) -> bool:
         return self.value == other.value
 
     # TODO: Calculate back propagation
