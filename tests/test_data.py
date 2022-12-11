@@ -30,11 +30,11 @@ def test_backward_propagation():
     b = Node(3.0)
     c = a * b
     d = Node(1.5)
-    e = d + c
+    e = d + c + a
     e.backward()
-    
+
     assert e.grad == 1.0
     assert d.grad == 1.0
     assert c.grad == 1.0
     assert b.grad == 2.0
-    assert a.grad == 3.0
+    assert a.grad == 4.0

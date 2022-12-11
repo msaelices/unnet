@@ -11,11 +11,11 @@ MUL = '*'
 def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> float:
     match op:
         case '+':
-            node.grad = result.grad
-            other.grad = result.grad
+            node.grad += result.grad
+            other.grad += result.grad
         case '*':
-            node.grad = other.value * result.grad
-            other.grad = node.value * result.grad
+            node.grad += other.value * result.grad
+            other.grad += node.value * result.grad
         case _:
             raise RuntimeError('Invalid operation')
 
