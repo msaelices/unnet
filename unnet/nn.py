@@ -17,7 +17,10 @@ class Neuron:
 
     def out(self, inputs: list[float]):
         # TODO: Implement an activation functions
-        return sum((w * x for w, x in zip(self.weights, inputs)), self.bias)
+        # Separate the first input and weight so the sum function give us a closer plot when drawing the resulting node
+        w1, *remaining_weights = self.weights
+        x1, *remaining_inputs = inputs
+        return sum((w * x for w, x in zip(remaining_weights, remaining_inputs)), start=w1 * x1) + self.bias
 
     @classmethod
     def rand_neuron(cls, num_inputs: int, bias: float = 0.0):
