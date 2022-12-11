@@ -29,7 +29,7 @@ def draw(graph: Node) -> Digraph:
         n_name = str(hash(n))
         plot.node(
             name=n_name,
-            label=f'{n.value} | g: {n.grad}',
+            label=f'{n.value:.3f} | g: {n.grad}',
             shape='record',
         )
         if n.op:
