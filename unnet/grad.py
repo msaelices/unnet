@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from .utils import walk
 
 
@@ -19,19 +21,14 @@ def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> floa
             raise RuntimeError('Invalid operation')
 
 
+@dataclass
 class Node:
     """Representation of an expression node capable of performing math operations and calculate the back propagation"""
 
-    def __init__(
-        self,
-        value: int | float,
-        op: str | None = None,
-        parents: tuple | None = None,
-    ) -> None:
-        self.value = value
-        self.parents = parents or ()
-        self.op = op
-        self.grad: float = 0.0
+    value: int | float
+    op: str | None = None
+    parents: tuple = tuple()
+    grad: int | float = 0.0
 
     def __repr__(self) -> str:
         return f'Node({self.value})'
