@@ -32,7 +32,7 @@ class Node:
     grad: int | float = 0.0
 
     def __repr__(self) -> str:
-        return f'{self.name if self.name else "Node"}({self.value})'
+        return f'{self.name} = {self.value}'
 
     def __hash__(self) -> int:
         return id(self)
