@@ -8,8 +8,8 @@ repos:
     rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
--   repo: https://github.com/pycqa/flake8
-    rev: 3.7.9
+-   repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
     hooks:
     - id: flake8
       args: [--extend-ignore=E501]
