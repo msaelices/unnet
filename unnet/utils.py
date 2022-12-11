@@ -7,16 +7,16 @@ if TYPE_CHECKING:
     from unnet.data import Node
 
 
-def walk(n: Node) -> tuple[set, set]:
-    nodes, edges = set(), set()
+def walk(n: Node) -> tuple[list, list]:
+    nodes, edges = list(), list()
 
     if n not in nodes:
-        nodes.add(n)
+        nodes.append(n)
         for parent in n.parents:
-            edges.add((parent, n))
+            edges.append((parent, n))
             ns, es = walk(parent)
-            nodes |= ns
-            edges |= es
+            nodes += ns
+            edges += es
 
     return nodes, edges
 
@@ -29,8 +29,8 @@ def draw(graph: Node) -> Digraph:
         n_name = str(hash(n))
         plot.node(
             name=n_name,
-            label=str(n.value),
-            shape='box',
+            label=f'{n.value} | g: {n.grad}',
+            shape='record',
         )
         if n.op:
             plot.node(name=n_name + n.op, label=n.op, shape='circle')
