@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
-from typing import Generator
+from typing import Generator, cast
 
 from .grad import Node
 
@@ -23,9 +23,11 @@ class Neuron:
     def nodes(self):
         return self.weights + [self.bias]
 
-    def out(self, inputs: list[float]) -> Node:
+    def out(self, inputs: list[float] | list[Node]) -> Node:
         # TODO: Implement an activation functions
-        input_nodes = [x if isinstance(x, Node) else Node(x, name=f'x{i}') for i, x in enumerate(inputs)]
+        input_nodes = cast(
+            list[Node], [Node(x, name=f'x{i}') if isinstance(x, float) else x for i, x in enumerate(inputs)]
+        )
         # Separate the first input and weight so the sum function give us a closer plot when drawing the resulting node
         w1, *remaining_weights = self.weights
         x1, *remaining_inputs = input_nodes
@@ -48,7 +50,7 @@ class Layer:
     def nodes(self):
         return [n for neuron in self.neurons for n in neuron.nodes]
 
-    def out(self, inputs: list[float]) -> list[Node]:
+    def out(self, inputs: list[float] | list[Node]) -> list[Node]:
         return [n.out(inputs) for n in self.neurons]
 
     @classmethod
@@ -68,10 +70,11 @@ class Network:
     def nodes(self):
         return [n for layer in self.layers for n in layer.nodes]
 
-    def out(self, inputs: list[float]) -> list[Node]:
+    def out(self, inputs: list[float] | list[Node]) -> Node:
         for layer in self.layers:
             inputs = layer.out(inputs)
-        return inputs if len(inputs) > 1 else inputs[0]
+        # Note: this is only valid if the network has only one output
+        return inputs[0]  # type: ignore
 
     def train_gen(self, training_data: list[list[float]], desired_output: list[float], steps: int = 20) -> Generator:
         for _ in range(steps):
@@ -91,10 +94,13 @@ class Network:
             yield loss.value
 
     @classmethod
-    def create(cls, num_inputs: int, outputs: list[int]):
+    def create(cls, num_inputs: int, neurons: list[int]):
+        """Create a neural network with num_inputs inputs, an array of intermediate neurons, and one output neuron"""
+        assert neurons[-1] == 1  # only one output neuron
+
         layers = []
         layer_inputs = num_inputs
-        for num_outputs in outputs:
+        for num_outputs in neurons:
             layers.append(Layer.rand_layer(num_inputs=layer_inputs, num_neurons=num_outputs))
             layer_inputs = num_outputs  # the inputs of the next layer are the outputs of the previous layer
 

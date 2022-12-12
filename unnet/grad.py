@@ -11,7 +11,7 @@ MUL = '*'
 POW = '^'
 
 
-def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> float:
+def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> None:
     match op:
         case '+':
             node.grad += result.grad
