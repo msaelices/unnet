@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
+from typing import Generator
 
 from .grad import Node
 
@@ -17,6 +18,10 @@ class Neuron:
 
     def __repr__(self) -> str:
         return f'Neuron(num_inputs={len(self.weights)})'
+
+    @property
+    def nodes(self):
+        return self.weights + [self.bias]
 
     def out(self, inputs: list[float]) -> Node:
         # TODO: Implement an activation functions
@@ -39,6 +44,10 @@ class Layer:
     def __repr__(self):
         return f'Layer(neurons={", ".join(str(n) for n in self.neurons)})'
 
+    @property
+    def nodes(self):
+        return [n for neuron in self.neurons for n in neuron.nodes]
+
     def out(self, inputs: list[float]) -> list[Node]:
         return [n.out(inputs) for n in self.neurons]
 
@@ -55,7 +64,38 @@ class Network:
     def __repr__(self):
         return f'Network(num_layers={len(self.layers)})'
 
+    @property
+    def nodes(self):
+        return [n for layer in self.layers for n in layer.nodes]
+
     def out(self, inputs: list[float]) -> list[Node]:
         for layer in self.layers:
             inputs = layer.out(inputs)
-        return inputs
+        return inputs if len(inputs) > 1 else inputs[0]
+
+    def train_gen(self, training_data: list[list[float]], desired_output: list[float], steps: int = 20) -> Generator:
+        for _ in range(steps):
+            # forward step
+            prediction = [self.out(x) for x in training_data]
+            loss = sum((pred - out) ** 2 for out, pred in zip(desired_output, prediction))
+
+            # back propagation
+            for n in self.nodes:
+                n.grad = 0.0
+            loss.backward()
+
+            # refine weights
+            for n in self.nodes:
+                n.value += -0.1 * n.grad
+
+            yield loss.value
+
+    @classmethod
+    def create(cls, num_inputs: int, outputs: list[int]):
+        layers = []
+        layer_inputs = num_inputs
+        for num_outputs in outputs:
+            layers.append(Layer.rand_layer(num_inputs=layer_inputs, num_neurons=num_outputs))
+            layer_inputs = num_outputs  # the inputs of the next layer are the outputs of the previous layer
+
+        return cls(layers=layers)
