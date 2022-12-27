@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 
 from .utils import walk
@@ -9,9 +10,10 @@ ADD = '+'
 SUB = '-'
 MUL = '*'
 POW = '^'
+TANH = 'tanh'
 
 
-def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> None:
+def _calculate_gradients(op: str, result: Node, node: Node, other: Node = None) -> None:
     match op:
         case '+':
             node.grad += result.grad
@@ -24,6 +26,8 @@ def _calculate_gradients(op: str, node: Node, other: Node, result: Node) -> None
             other.grad += node.value * result.grad
         case '^':
             node.grad += other.value * node.value ** (other.value - 1) * result.grad
+        case 'tanh':
+            node.grad += (1 - result.value**2) * result.grad
         case _:
             raise RuntimeError('Invalid operation')
 
@@ -66,6 +70,9 @@ class Node:
     def __rpow__(self, other):
         return self**other
 
+    def tanh(self):
+        return Node(math.tanh(self.value), name=f'tanh({self.name})', op=TANH, parents=(self,))
+
     def __eq__(self, other) -> bool:
         return self.value == other.value
 
@@ -76,5 +83,5 @@ class Node:
         nodes, _ = walk(self)
         # generate the gradient of all my parents until we reach the end of the graph
         for n in nodes:
-            if n.parents:
-                _calculate_gradients(n.op, n.parents[0], n.parents[1], n)
+            if parents := n.parents:
+                _calculate_gradients(n.op, n, *parents)

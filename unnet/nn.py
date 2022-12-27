@@ -24,14 +24,16 @@ class Neuron:
         return self.weights + [self.bias]
 
     def out(self, inputs: list[float] | list[Node]) -> Node:
-        # TODO: Implement an activation functions
         input_nodes = cast(
             list[Node], [Node(x, name=f'x{i}') if isinstance(x, float) else x for i, x in enumerate(inputs)]
         )
         # Separate the first input and weight so the sum function give us a closer plot when drawing the resulting node
         w1, *remaining_weights = self.weights
         x1, *remaining_inputs = input_nodes
-        return sum((w * x for w, x in zip(remaining_weights, remaining_inputs)), start=w1 * x1) + self.bias
+        result = sum((w * x for w, x in zip(remaining_weights, remaining_inputs)), start=w1 * x1) + self.bias
+
+        # Apply the activation function to the result
+        return result.tanh()
 
     @classmethod
     def rand_neuron(cls, num_inputs: int, bias: float = 0.0):

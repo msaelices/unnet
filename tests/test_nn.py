@@ -11,7 +11,7 @@ def test_rand_neuron():
 def test_neuron_output():
     neuron = Neuron(weights=[0.5, 2], bias=0.2)
     result = neuron.out([2.0, 3.0])
-    assert result.value == 7.2
+    assert result.value == 0.9999988852198828
 
 
 def test_layer_output():
@@ -19,8 +19,8 @@ def test_layer_output():
     neuron2 = Neuron(weights=[0.2, -0.2], bias=0.9)
     layer = Layer([neuron1, neuron2])
     results = layer.out([2.0, 3.0])
-    assert results[0].value == 3.6000000000000005
-    assert results[1].value == 0.7
+    assert results[0].value == 0.9985079423323266
+    assert results[1].value == 0.6043677771171636
 
 
 def test_network_output():
@@ -31,7 +31,7 @@ def test_network_output():
     layer2 = Layer([neuron3])
     network = Network([layer1, layer2])
     result = network.out([2.0, 3.0])
-    assert result.value == -1.7900000000000003
+    assert result.value == -0.4761113481082351
 
 
 def test_network_create():
