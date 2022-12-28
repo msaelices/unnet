@@ -36,8 +36,9 @@ class Neuron:
         return result.tanh()
 
     @classmethod
-    def rand_neuron(cls, num_inputs: int, bias: float = 0.0):
+    def rand_neuron(cls, num_inputs: int):
         weights = [random.uniform(-1.0, 1.0) for _ in range(num_inputs)]
+        bias = random.uniform(-1.0, 1.0)
         return cls(weights=weights, bias=bias)
 
 
