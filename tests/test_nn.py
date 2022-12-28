@@ -56,7 +56,7 @@ def test_network_train():
     # neural network with 3 inputs, 3 hidden neurons, and 1 output neuron
     network = Network.create(3, [3, 1])
 
-    loss_list = list(network.train_gen(training_data=xs, desired_output=ys, steps=2000))
+    loss_list = list(network.train_gen(training_data=xs, desired_output=ys, steps=1000))
     for loss in loss_list:
         print(loss)  # print loss for each step (hidden by pytest when test passes)
 

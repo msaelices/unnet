@@ -80,7 +80,7 @@ class Network:
         return inputs[0]  # type: ignore
 
     def train_gen(self, training_data: list[list[float]], desired_output: list[float], steps: int = 20) -> Generator:
-        for _ in range(steps):
+        for i in range(steps):
             # forward step
             prediction = [self.out(x) for x in training_data]
             loss = sum((pred - out) ** 2 for out, pred in zip(desired_output, prediction))
@@ -90,9 +90,11 @@ class Network:
                 n.grad = 0.0
             loss.backward()
 
-            # refine weights
+            # refine weights and biases, changing both using bigger diffs on the first iterations (~0.2)
+            # and in the last steps, using smaller ones (~0.1)
+            diff = 0.2 - 0.1 * i / steps
             for n in self.nodes:
-                n.value += -0.1 * n.grad
+                n.value -= diff * n.grad
 
             yield loss.value
 
