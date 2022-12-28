@@ -13,19 +13,19 @@ POW = '^'
 TANH = 'tanh'
 
 
-def _calculate_gradients(op: str, result: Node, node: Node, other: Node = None) -> None:
+def _calculate_gradients(op: str, result: Node, node: Node, other: Node | None = None) -> None:
     match op:
         case '+':
             node.grad += result.grad
-            other.grad += result.grad
+            other.grad += result.grad  # type: ignore
         case '-':
             node.grad -= result.grad
-            other.grad -= result.grad
+            other.grad -= result.grad  # type: ignore
         case '*':
-            node.grad += other.value * result.grad
-            other.grad += node.value * result.grad
+            node.grad += other.value * result.grad  # type: ignore
+            other.grad += node.value * result.grad  # type: ignore
         case '^':
-            node.grad += other.value * node.value ** (other.value - 1) * result.grad
+            node.grad += other.value * node.value ** (other.value - 1) * result.grad  # type: ignore
         case 'tanh':
             node.grad += (1 - result.value**2) * result.grad
         case _:
