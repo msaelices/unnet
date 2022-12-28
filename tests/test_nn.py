@@ -1,3 +1,4 @@
+from pytest import approx
 from unnet.nn import Neuron, Layer, Network
 
 
@@ -42,13 +43,24 @@ def test_network_create():
 
 
 def test_network_train():
-    neuron1 = Neuron(weights=[0.5, 0.8], bias=0.2)
-    neuron2 = Neuron(weights=[0.2, -0.2], bias=0.9)
-    neuron3 = Neuron(weights=[-0.5, 0.3], bias=-0.2)
-    layer1 = Layer([neuron1, neuron2])
-    layer2 = Layer([neuron3])
-    network = Network([layer1, layer2])
-    prev_loss = 1000000
-    for loss in network.train_gen(training_data=[[1.2, 1.5], [3.4, 4.5]], desired_output=[1.0, 2.0]):
-        assert loss < prev_loss
-        prev_loss = loss
+    # training a neural network to choose the minimum of three numbers
+    xs = [
+        [3.0, 2.0, -1.0],
+        [1.0, 0.0, -0.5],
+        [0.5, 2.0, 1.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 2.0, 3.0],
+        [0.0, 1.0, 0.0],
+    ]  # inputs
+    ys = [-1.0, -0.5, 0.5, 0.0, 1.0, 0.0]  # targets (minimum of each input)
+    # neural network with 3 inputs, 3 hidden neurons, and 1 output neuron
+    network = Network.create(3, [3, 1])
+
+    loss_list = list(network.train_gen(training_data=xs, desired_output=ys, steps=2000))
+    for loss in loss_list:
+        print(loss)  # print loss for each step (hidden by pytest when test passes)
+
+    assert loss_list[-1] < loss_list[0]
+    assert loss_list[-1] < 0.1
+    # check the output of the trained neural network with the first input
+    assert network.out([3.0, 2.0, -1.0]).value == approx(-1.0, 0.1)
