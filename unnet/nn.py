@@ -90,11 +90,11 @@ class Network:
                 n.grad = 0.0
             loss.backward()
 
-            # refine weights and biases, changing both using bigger diffs on the first iterations (~0.2)
+            # refine weights and biases, changing both using bigger learning rate on the first iterations (~0.2)
             # and in the last steps, using smaller ones (~0.1)
-            diff = 0.2 - 0.1 * i / steps
+            l_rate = 0.2 - 0.1 * i / steps
             for n in self.nodes:
-                n.value -= diff * n.grad
+                n.value -= l_rate * n.grad
 
             yield loss.value
 
