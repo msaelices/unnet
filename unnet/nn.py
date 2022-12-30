@@ -82,7 +82,7 @@ class Network:
     def train_gen(self, training_data: list[list[float]], desired_output: list[float], steps: int = 20) -> Generator:
         for i in range(steps):
             # forward step
-            prediction = [self.out(x) for x in training_data]
+            prediction = (self.out(x) for x in training_data)
             loss = sum((pred - out) ** 2 for out, pred in zip(desired_output, prediction))
 
             # back propagation
