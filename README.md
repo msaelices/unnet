@@ -75,28 +75,43 @@ You can see a more detailed example in the [NN Jupyter notebook](./notebooks/nn.
 
 ## Installation
 
-Install all dependencies (including dev dependencies) using uv:
+### Prerequisites
 
-```bash
-uv sync --all-extras
-```
-
-Or if you don't have uv installed yet, install it first:
+This project uses [uv](https://github.com/astral-sh/uv) for dependency management. If you don't have uv installed:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-## Testing
+### Environment Setup
 
-Run the tests using pytest:
-
+1. Clone the repository:
 ```bash
-uv run pytest
+git clone https://github.com/yourusername/unnet.git
+cd unnet
 ```
 
-Or if you've activated the virtual environment:
+2. Install all dependencies (including dev dependencies):
+```bash
+uv sync
+```
+
+
+## Interactive Examples
+
+- [Grad notebook](./notebooks/grad.ipynb) - Forward and backward propagation with visualizations
+- [NN notebook](./notebooks/nn.ipynb) - Neural network training examples
+
+For interactive exploration and testing:
 
 ```bash
-python -m pytest
+uv run jupyter notebook notebooks/grad.ipynb
+uv run jupyter notebook notebooks/nn.ipynb
 ```
+
+
+## Contributing
+
+We welcome contributions! If you'd like to contribute to unnet, please see our [Contributing Guide](CONTRIBUTING.md)
+
+For questions or issues, please open an issue on GitHub.
