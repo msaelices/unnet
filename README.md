@@ -73,15 +73,29 @@ Let's create an artificial neuron with 2 weights and calculate the output given 
 
 You can see a more detailed example in the [NN Jupyter notebook](./notebooks/nn.ipynb), which includes plots of the calculated neuron
 
-## Testing
+## Installation
 
-### Installing pytest
+Install all dependencies (including dev dependencies) using uv:
 
 ```bash
-pip install pytest
+uv sync --all-extras
 ```
 
-### Running the tests
+Or if you don't have uv installed yet, install it first:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+## Testing
+
+Run the tests using pytest:
+
+```bash
+uv run pytest
+```
+
+Or if you've activated the virtual environment:
 
 ```bash
 python -m pytest

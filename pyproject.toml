@@ -1,3 +1,22 @@
+[project]
+name = "unnet"
+version = "0.1.0"
+description = "Micro Neural Network - Educational proof-of-concept for learning neural networks and automatic differentiation"
+requires-python = ">=3.11"
+dependencies = [
+    "graphviz",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "flake8",
+    "mypy",
+    "pytest",
+    "pre-commit",
+    "jupyter",
+]
+
 [tool.black]
 revision = "main"
 diff = true
