@@ -19,11 +19,7 @@ class Neuron:
     def __repr__(self) -> str:
         return f'Neuron(num_inputs={len(self.weights)})'
 
-    @property
-    def nodes(self):
-        return self.weights + [self.bias]
-
-    def out(self, inputs: list[float] | list[Node]) -> Node:
+    def __call__(self, inputs: list[float] | list[Node]) -> Node:
         input_nodes = cast(
             list[Node], [Node(x, name=f'x{i}') if isinstance(x, float) else x for i, x in enumerate(inputs)]
         )
@@ -34,6 +30,10 @@ class Neuron:
 
         # Apply the activation function to the result
         return result.tanh()
+
+    @property
+    def nodes(self):
+        return self.weights + [self.bias]
 
     @classmethod
     def rand_neuron(cls, num_inputs: int):
@@ -49,12 +49,12 @@ class Layer:
     def __repr__(self):
         return f'Layer(neurons={", ".join(str(n) for n in self.neurons)})'
 
+    def __call__(self, inputs: list[float] | list[Node]) -> list[Node]:
+        return [n(inputs) for n in self.neurons]
+
     @property
     def nodes(self):
         return [n for neuron in self.neurons for n in neuron.nodes]
-
-    def out(self, inputs: list[float] | list[Node]) -> list[Node]:
-        return [n.out(inputs) for n in self.neurons]
 
     @classmethod
     def rand_layer(cls, num_neurons: int, num_inputs: int):
@@ -69,20 +69,20 @@ class Network:
     def __repr__(self):
         return f'Network(num_layers={len(self.layers)})'
 
+    def __call__(self, inputs: list[float] | list[Node]) -> Node:
+        for layer in self.layers:
+            inputs = layer(inputs)
+        # Note: this is only valid if the network has only one output
+        return inputs[0]  # type: ignore
+
     @property
     def nodes(self):
         return [n for layer in self.layers for n in layer.nodes]
 
-    def out(self, inputs: list[float] | list[Node]) -> Node:
-        for layer in self.layers:
-            inputs = layer.out(inputs)
-        # Note: this is only valid if the network has only one output
-        return inputs[0]  # type: ignore
-
     def train_gen(self, training_data: list[list[float]], desired_output: list[float], steps: int = 20) -> Generator:
         for i in range(steps):
             # forward step
-            prediction = (self.out(x) for x in training_data)
+            prediction = (self(x) for x in training_data)
             loss = sum((pred - out) ** 2 for out, pred in zip(desired_output, prediction))
 
             # back propagation

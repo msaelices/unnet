@@ -49,7 +49,7 @@ Let's create an artificial neuron with 2 weights and calculate the output given 
 ```python
 >>> from unnet.nn import Neuron
 >>> neuron1 = Neuron(weights=[0.7, 0.8], bias=0.5)
->>> result = neuron1.out([2.0, 3.0])
+>>> result = neuron1([2.0, 3.0])
 >>> print(result)
 w1 * x0 + w2 * x1 + bias = 4.300000000000001
 ```
@@ -66,7 +66,7 @@ Let's create an artificial neuron with 2 weights and calculate the output given 
 >>> layer1 = Layer([neuron1, neuron2])
 >>> layer2 = Layer([neuron3, neuron4])
 >>> network = Network([layer1, layer2])
->>> results = network.out([2.0, 3.0])
+>>> results = network([2.0, 3.0])
 >>> print(results[0].value, results[1].value)
 -1.7900000000000003 -0.18000000000000016
 ```
