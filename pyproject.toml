@@ -9,20 +9,20 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "black",
-    "flake8",
+    "ruff",
     "mypy",
     "pytest",
     "pre-commit",
     "jupyter",
 ]
 
-[tool.black]
-revision = "main"
-diff = true
-check = true
-isort = true
-skip_string_normalization = true
-log_level = "INFO"
-line_length = 120
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]
 
